@@ -1,0 +1,68 @@
+import 'package:delivery_app/screens/home/food_screen.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../data/models/food.dart';
+
+class FoodItem extends StatelessWidget {
+  final Food item;
+  const FoodItem({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () =>
+            Navigator.pushNamed(context, FoodScreen.routeName, arguments: item),
+        child: Container(
+          margin: EdgeInsets.all(5),
+          padding: EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5.0,
+                offset: Offset(0, 3),
+                color: Colors.grey.shade300,
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ClipRRect(
+                child: Image.asset(
+                  item.image,
+                ),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              SizedBox(
+                height: 9.0,
+              ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    item.name,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.currency_pound,
+                    color: Colors.orange,
+                  ),
+                  Text(
+                    item.price.toString(),
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
