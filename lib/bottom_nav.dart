@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:delivery_app/screens/home/food_screen.dart';
+import 'package:delivery_app/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 
@@ -26,6 +27,7 @@ class _BottomNavState extends State<BottomNav> {
         // ignore: prefer_const_literals_to_create_immutables
         children: [
           Homepage(),
+          ProfileScreen(),
           // //RestaurantScreen(),
           // FoodScreen(),
         ],

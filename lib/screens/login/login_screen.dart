@@ -1,8 +1,10 @@
 import 'package:delivery_app/screens/login/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../bottom_nav.dart';
 import '../../constant.dart';
+import '../../providers/auth_provider.dart';
 import 'components/helper.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String email = '';
   String? password = '';
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,48 +54,67 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 40),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 3, left: 3),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {},
-                    // onPressed: () async {
-                    //   FocusManager.instance.primaryFocus?.unfocus();
-                    //   if (_formKey.currentState!.validate()) {
-                    //     // sign in to firebase
-                    //     String? isLogin =
-                    //         await context.read<AuthProvider>().signIn(
-                    //               email: email.trim(),
-                    //               password: password!.trim(),
-                    //             );
+                Consumer(
+                  builder: (context, ref, _) {
+                    final _auth = ref.read(authProvider);
+                    return Container(
+                        padding: EdgeInsets.only(top: 3, left: 3),
+                        child: MaterialButton(
+                          minWidth: double.infinity,
+                          height: 60,
+                          onPressed: () async {
+                            FocusManager.instance.primaryFocus?.unfocus();
 
-                    //     // nav to main screen
-                    //     if (isLogin == 'Signed')
-                    //       Navigator.pushReplacement(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => const BottomNav()));
-                    //     else {
-                    //       var snackBar = SnackBar(content: Text(isLogin!));
-                    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    //     }
-                    //   }
-                    // },
-                    color: kPrimaryColor.shade700,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              // sign in to firebase
+                              String? isLogin = await _auth
+                                  .signIn(
+                                email: email.trim(),
+                                password: password!.trim(),
+                              )
+                                  .whenComplete(() {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              });
+
+                              // nav to main screen
+                              if (isLogin == 'Signed')
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const BottomNav()));
+                              else {
+                                var snackBar =
+                                    SnackBar(content: Text(isLogin!));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                            }
+                          },
+                          color: kPrimaryColor.shade700,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: _isLoading
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "Sign in",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ));
+                  },
                 ),
                 const SizedBox(height: 40),
                 const Text("or continue with"),

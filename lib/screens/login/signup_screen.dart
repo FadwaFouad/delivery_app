@@ -1,5 +1,8 @@
+import 'package:delivery_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../bottom_nav.dart';
 import '../../constant.dart';
 import 'components/helper.dart';
 import 'login_screen.dart';
@@ -21,6 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   String email = '';
   String? password = '';
   String? confirmPassword = '';
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,49 +59,65 @@ class _SignupPageState extends State<SignupPage> {
                     SizedBox(height: 30),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 3, left: 3),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {},
-                    // onPressed: () async {
-                    //   FocusManager.instance.primaryFocus?.unfocus();
-                    //   if (_formKey.currentState!.validate()) {
-                    //     // conect to firebase to login
-                    //     String? isSign =
-                    //         await context.read<AuthProvider>().signUp(
-                    //               name: userName,
-                    //               email: email.trim(),
-                    //               password: password!.trim(),
-                    //             );
+                Consumer(builder: (context, ref, _) {
+                  final _auth = ref.read(authProvider);
 
-                    //     if (isSign == 'Signed') {
-                    //       Navigator.pushReplacement(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => BottomNav()));
-                    //     } else {
-                    //       var snackBar = SnackBar(content: Text(isSign!));
-                    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    //     }
-                    //   }
-                    // },
-                    color: kPrimaryColor.shade700,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Text(
-                      "Sign up",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white,
+                  return Container(
+                    padding: EdgeInsets.only(top: 3, left: 3),
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          // conect to firebase to login
+                          String? isSign = await _auth
+                              .signUp(
+                            name: userName,
+                            email: email.trim(),
+                            password: password!.trim(),
+                          )
+                              .whenComplete(() {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          });
+
+                          if (isSign == 'Signed') {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BottomNav()));
+                          } else {
+                            var snackBar = SnackBar(content: Text(isSign!));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        }
+                      },
+                      color: kPrimaryColor.shade700,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
                       ),
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text(
+                              "Sign up",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
-                  ),
-                ),
+                  );
+                }),
                 SizedBox(
                   height: 20,
                 ),
