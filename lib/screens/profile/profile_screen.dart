@@ -1,8 +1,9 @@
+import 'package:delivery_app/providers/auth_provider.dart';
 import 'package:delivery_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/auth_provider.dart';
+import '../../data/services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override

@@ -10,7 +10,3 @@ final authProvider = Provider<Authentication>((ref) {
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.read(authProvider).authStateChange;
 });
-
-// final signInProvider = FutureProvider<String?>((ref, email, pass) {
-//   return ref.read(authProvider).signIn();
-// });

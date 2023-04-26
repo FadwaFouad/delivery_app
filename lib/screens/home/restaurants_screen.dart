@@ -1,19 +1,23 @@
-import 'package:delivery_app/data/models/food.dart';
+import 'package:delivery_app/providers/data_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/repo/repo.dart';
+import '../../data/models/food.dart';
 import 'components/restaurant/categories.dart';
 import 'components/restaurant/food_item.dart';
 
-class RestaurantScreen extends StatelessWidget {
+class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
   static const routeName = '/restaurantScreen';
 
   @override
-  Widget build(BuildContext context) {
-    final List<Food> foodList = Repository().getFoodList();
+  Widget build(BuildContext context, ref) {
+    //get passed arguments
     final String restaruantName =
         ModalRoute.of(context)!.settings.arguments as String;
+
+    // get data from provider
+    final _data = ref.watch(dataStreamProvider(restaruantName));
 
     return SafeArea(
       child: Scaffold(
@@ -54,15 +58,29 @@ class RestaurantScreen extends StatelessWidget {
             CategoriesList(),
             SizedBox(height: 10),
             Expanded(
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.8,
-                ),
-                children: List.generate(foodList.length, (index) {
-                  return FoodItem(item: foodList[index]);
-                }),
-              ),
+              child: _data.when(
+                  data: (data) {
+                    List<Food> foodList = data.docs
+                        .map((doc) => Food.fromFirestore(doc))
+                        .toList();
+                    return foodList.isEmpty
+                        ? const Center(
+                            child: Text('no menu available',
+                                style: TextStyle(fontSize: 17)))
+                        : GridView(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.8,
+                            ),
+                            children: List.generate(foodList.length, (index) {
+                              return FoodItem(item: foodList[index]);
+                            }),
+                          );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, trace) => const Center(child: Text('Error'))),
             ),
           ],
         ),

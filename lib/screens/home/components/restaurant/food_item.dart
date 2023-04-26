@@ -32,21 +32,28 @@ class FoodItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ClipRRect(
-                child: Image.asset(
+                child: Image.network(
                   item.image,
+                  height: MediaQuery.of(context).size.height * 0.18,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
                 ),
                 borderRadius: BorderRadius.circular(15.0),
               ),
               SizedBox(
                 height: 9.0,
               ),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  item.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+              SizedBox(height: 5),
               Row(
                 children: <Widget>[
-                  Text(
-                    item.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Spacer(),
                   Icon(
                     Icons.currency_pound,
                     color: Colors.orange,

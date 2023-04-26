@@ -58,7 +58,7 @@ Widget ItemInfo(context, Food food) {
           foodTitle(context, food),
           // des
           Text(
-            food.descreption,
+            food.description,
             style: TextStyle(
               height: 1.5,
             ),
