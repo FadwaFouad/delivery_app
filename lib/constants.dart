@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-// API Keys
+// API key
+const String googleApiKey = "AIzaSyD9mlyLrYXaQ1D2xICInv8uJiGp3VHQ6DE";
 
 // colors
 const kPrimaryColor = Colors.orange;

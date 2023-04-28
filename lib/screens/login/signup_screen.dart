@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../bottom_nav.dart';
-import '../../constant.dart';
+import '../../constants.dart';
 import 'components/helper.dart';
 import 'login_screen.dart';
 

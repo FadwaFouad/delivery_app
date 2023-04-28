@@ -1,8 +1,7 @@
 import 'package:delivery_app/data/models/food.dart';
-import 'package:delivery_app/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../constant.dart';
+import '../../constants.dart';
 import 'components/food/item_image.dart';
 import 'components/food/order_button.dart';
 

@@ -13,7 +13,6 @@ class ItemImage extends StatelessWidget {
         imgSrc,
         height: size.height * 0.25,
         width: double.infinity,
-        // it cover the 25% of total height
         fit: BoxFit.contain,
       ),
     );
