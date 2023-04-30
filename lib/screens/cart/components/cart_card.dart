@@ -42,7 +42,7 @@ class CartCard extends StatelessWidget {
                   children: [
                     Text(
                       ' ${food.name}, ',
-                      style: TextStyle(color: Colors.black54, fontSize: 20),
+                      style: TextStyle(color: Colors.black54, fontSize: 17),
                       maxLines: 2,
                     ),
                     Text.rich(
@@ -94,6 +94,7 @@ class CartCard extends StatelessWidget {
                 onPressed: () {}),
           ],
         ),
+        Divider(),
       ],
     );
   }
