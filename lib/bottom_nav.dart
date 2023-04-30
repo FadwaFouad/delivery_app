@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:delivery_app/screens/cart/cart_screen.dart';
 import 'package:delivery_app/screens/profile/profile_screen.dart';
+import 'package:delivery_app/size.config.dart';
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 
@@ -16,19 +18,15 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    // initlize data
-    // int currentIndex = context.watch<NavigationProvider>().getCurrentIndex;
-    // context.read<ListProvider>().todayList();
+    SizeConfig().init(context);
 
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        // ignore: prefer_const_literals_to_create_immutables
         children: [
           Homepage(),
+          CartScreen(),
           ProfileScreen(),
-          // //RestaurantScreen(),
-          // FoodScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

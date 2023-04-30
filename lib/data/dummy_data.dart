@@ -18,6 +18,27 @@ List<Food> foodList = [
       restaurant: 'Ozone for Food',
       description: ''),
   Food(
+      name: 'Burger',
+      image: 'assets/images/ozone.jpg',
+      price: 22.5,
+      type: '1',
+      restaurant: 'Ozone for Food',
+      description: ''),
+  Food(
+      name: 'Burger',
+      image: 'assets/images/burger.png',
+      price: 22.5,
+      type: '1',
+      restaurant: 'Ozone for Food',
+      description: ''),
+  Food(
+      name: 'Burger',
+      image: 'assets/images/burger.png',
+      price: 22.5,
+      type: '1',
+      restaurant: 'Ozone for Food',
+      description: ''),
+  Food(
     name: ' Burger',
     image: 'assets/images/burger.png',
     price: 22.5,

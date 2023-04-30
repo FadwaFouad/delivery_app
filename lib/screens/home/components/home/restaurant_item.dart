@@ -37,7 +37,7 @@ class RestaurantItem extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.2,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/images/default_image.png');
+                  return Image.asset('assets/images/loading_icon.gif');
                 },
               ),
               borderRadius: BorderRadius.circular(15.0),

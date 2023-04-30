@@ -32,7 +32,7 @@ class MyApp extends ConsumerWidget {
       title: 'Delivery App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Montserrat',
+        fontFamily: 'RobotoSlab',
         primarySwatch: Colors.orange,
       ),
       home: authState.when(

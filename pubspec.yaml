@@ -42,6 +42,7 @@ dependencies:
   cloud_firestore: ^4.5.2
   geolocator: ^9.0.2
   google_maps_webservice: ^0.0.19
+  fancy_cart: ^0.0.6
 
 dev_dependencies:
   flutter_test:
@@ -87,7 +88,11 @@ flutter:
         - asset: assets/fonts/Montserrat-Regular.ttf
         - asset: assets/fonts/Montserrat-Light.ttf
         - asset: assets/fonts/Montserrat-Bold.ttf
-        
+    - family: RobotoSlab
+      fonts:
+        - asset: assets/fonts/RobotoSlab-Regular.ttf
+        - asset: assets/fonts/RobotoSlab-Bold.ttf
+          style: italic
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

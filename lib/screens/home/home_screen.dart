@@ -70,7 +70,7 @@ class _HomepageState extends State<Homepage> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
-                      color: Colors.grey)),
+                      color: Colors.black54)),
             ),
             SizedBox(height: 5),
             // list of retaurants
@@ -78,7 +78,11 @@ class _HomepageState extends State<Homepage> {
                 child: _isLoading
                     ? Center(child: CircularProgressIndicator())
                     : !_isLoading && restaurantData.length == 0
-                        ? Center(child: Text('get restaurants around you!'))
+                        ? Center(
+                            child: Text(
+                            'get restaurants around you!',
+                            style: TextStyle(color: Colors.grey),
+                          ))
                         : ListView.builder(
                             itemCount: restaurantData.length,
                             itemBuilder: (ctx, index) {

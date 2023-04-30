@@ -65,8 +65,10 @@ class RestaurantScreen extends ConsumerWidget {
                         .toList();
                     return foodList.isEmpty
                         ? const Center(
-                            child: Text('no menu available',
-                                style: TextStyle(fontSize: 17)))
+                            child: Text(
+                            'no menu available',
+                            style: TextStyle(fontSize: 17, color: Colors.grey),
+                          ))
                         : GridView(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(

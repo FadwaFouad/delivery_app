@@ -15,7 +15,7 @@ class ItemImage extends StatelessWidget {
         width: double.infinity,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
-          return Image.asset('assets/images/default_image.png');
+          return Image.asset('assets/images/loading_icon.gif');
         },
       ),
     );
