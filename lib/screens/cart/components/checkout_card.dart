@@ -1,3 +1,4 @@
+import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../size.config.dart';
@@ -88,29 +89,31 @@ class CheckoutCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: getProportionateScreenWidth(10)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    text: "Total\n",
-                    style: TextStyle(color: Colors.grey),
-                    children: [
-                      TextSpan(
-                        text: "\$337.15",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                    ],
+            CartWidget(
+              cartBuilder: (controller) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: "Total\n",
+                      style: TextStyle(color: Colors.grey),
+                      children: [
+                        TextSpan(
+                          text: "\$${controller.getTotalPrice()}",
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: getProportionateScreenWidth(190),
-                  child: DefaultButton(
-                    text: "Check Out",
-                    press: () {},
+                  SizedBox(
+                    width: getProportionateScreenWidth(190),
+                    child: DefaultButton(
+                      text: "Check Out",
+                      press: () {},
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

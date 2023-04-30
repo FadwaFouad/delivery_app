@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 // API key
 const String googleApiKey = "AIzaSyD9mlyLrYXaQ1D2xICInv8uJiGp3VHQ6DE";
 
+//Strings
+String restaurantName = 'Ozone';
+
 // colors
 const kPrimaryColor = Colors.orange;
 const kPrimaryColorLight = Color(0xFFFFC61F);

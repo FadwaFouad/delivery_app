@@ -2,6 +2,7 @@ import 'package:delivery_app/providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants.dart' as cons;
 import '../../data/models/food.dart';
 import 'components/restaurant/categories.dart';
 import 'components/restaurant/food_item.dart';
@@ -17,7 +18,7 @@ class RestaurantScreen extends ConsumerWidget {
         ModalRoute.of(context)!.settings.arguments as String;
 
     // get data from provider
-    final _data = ref.watch(dataStreamProvider(restaruantName));
+    final _data = ref.watch(dataStreamProvider(cons.restaurantName));
 
     return SafeArea(
       child: Scaffold(
@@ -73,10 +74,12 @@ class RestaurantScreen extends ConsumerWidget {
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              childAspectRatio: 0.8,
+                              childAspectRatio: 0.75,
                             ),
                             children: List.generate(foodList.length, (index) {
-                              return FoodItem(item: foodList[index]);
+                              return FoodItem(
+                                  item: foodList[index],
+                                  resName: restaruantName);
                             }),
                           );
                   },

@@ -10,7 +10,10 @@ class FoodScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Food foodItem = ModalRoute.of(context)!.settings.arguments as Food;
+    Map<String, dynamic> data =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    Food foodItem = data['food'];
+    String resName = data['res'];
 
     return Scaffold(
         backgroundColor: kPrimaryColor.shade300,
@@ -31,14 +34,14 @@ class FoodScreen extends StatelessWidget {
               imgSrc: foodItem.image,
             ),
             Expanded(
-              child: ItemInfo(context, foodItem),
+              child: ItemInfo(context, foodItem, resName),
             ),
           ],
         ));
   }
 }
 
-Widget ItemInfo(context, Food food) {
+Widget ItemInfo(context, Food food, String resName) {
   Size size = MediaQuery.of(context).size;
   return Container(
     padding: EdgeInsets.all(20),
@@ -53,19 +56,23 @@ Widget ItemInfo(context, Food food) {
     child: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          shopeName(name: food.restaurant),
+          shopeName(name: resName),
           foodTitle(context, food),
           // des
+          SizedBox(height: 10),
           Text(
             food.description,
-            style: TextStyle(
-              height: 1.5,
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.grey.shade700),
           ),
           SizedBox(height: 50),
           // Free space  10% of total height
           OrderButton(
             size: size,
+            food: food,
+            resName: resName,
           )
         ],
       ),

@@ -1,15 +1,23 @@
+import 'dart:developer';
+
+import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constants.dart';
+import '../../../../data/models/food.dart';
 import '../../../login/login_screen.dart';
 
 class OrderButton extends StatelessWidget {
   const OrderButton({
     super.key,
     required this.size,
+    required this.food,
+    required this.resName,
   });
 
   final Size size;
+  final Food food;
+  final String resName;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +29,22 @@ class OrderButton extends StatelessWidget {
         color: kPrimaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, LoginPage.routeName);
-          },
+
+      /// add to cart button with action after add and model to add
+      child: AddToCartButton(
+        actionAfterAdding: () {
+          String message = "${food.name} added to Cart";
+          var snackBar = SnackBar(content: Text(message));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        },
+        cartModel: CartItem(
+            id: DateTime.now().millisecondsSinceEpoch,
+            name: food.name,
+            price: food.price,
+            image: food.image,
+            additionalData: {'restaurant': resName}),
+        child: Material(
+          color: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(

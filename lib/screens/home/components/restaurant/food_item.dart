@@ -5,15 +5,17 @@ import '../../../../data/models/food.dart';
 
 class FoodItem extends StatelessWidget {
   final Food item;
-  const FoodItem({super.key, required this.item});
+  final String resName;
+
+  const FoodItem({super.key, required this.item, required this.resName});
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () =>
-            Navigator.pushNamed(context, FoodScreen.routeName, arguments: item),
+        onTap: () => Navigator.pushNamed(context, FoodScreen.routeName,
+            arguments: {'food': item, 'res': resName}),
         child: Container(
           margin: EdgeInsets.all(5),
           padding: EdgeInsets.all(5.0),
@@ -37,6 +39,9 @@ class FoodItem extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.18,
                   width: double.infinity,
                   fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset('assets/images/loading_icon.gif');
+                  },
                 ),
                 borderRadius: BorderRadius.circular(15.0),
               ),

@@ -1,3 +1,4 @@
+import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/dummy_data.dart';
@@ -31,9 +32,11 @@ class CartScreen extends StatelessWidget {
               fontSize: 17,
             ),
           ),
-          Text(
-            "${foodList.length} items",
-            style: Theme.of(context).textTheme.bodySmall,
+          CartWidget(
+            cartBuilder: (controller) => Text(
+              "${controller.cartList.length} items",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ],
       ),

@@ -56,8 +56,13 @@ class _HomepageState extends State<Homepage> {
                     // stop loading
                     setState(() => _isLoading = false);
                   } catch (error) {
+                    String message = error.toString();
                     setState(() => _isLoading = false);
-                    var snackBar = SnackBar(content: Text(error.toString()));
+                    // when unable to host googleapi services, check internet
+                    if (message ==
+                        'Failed host lookup: \'maps.googleapis.com\'')
+                      message = 'check internet connection';
+                    var snackBar = SnackBar(content: Text(message));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 },
