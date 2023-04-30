@@ -1,19 +1,20 @@
 import 'package:delivery_app/data/models/restaurant.dart';
+import 'package:delivery_app/providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_app/screens/home/components/home/user_info.dart';
 import 'package:delivery_app/screens/home/components/home/restaurant_item.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/location_provider.dart';
+class Homepage extends StatefulWidget {
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
 
-class Homepage extends ConsumerWidget {
-  const Homepage({super.key});
+class _HomepageState extends State<Homepage> {
+  List<Restaurant> restaurantData = [];
+  bool _isLoading = false;
 
   @override
-  Widget build(BuildContext context, ref) {
-    List<Restaurant> restaurantData = [];
-    bool _isLoading = false;
-    // final List<Restaurant> restaurantData = Repository().getRestaurantList();
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -27,18 +28,6 @@ class Homepage extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(10),
               child: MaterialButton(
-                minWidth: double.infinity,
-                height: 45,
-                onPressed: () async {
-                  _isLoading = true;
-                  // get restaurant data from service
-                  restaurantData = await ref
-                      .read(locProvider)
-                      .retrieveNearbyRestaurants()
-                      .whenComplete(() => _isLoading = false);
-                  // Position position = await LocationService().getCurrentLocation();
-                  // print('${position.latitude},${position.longitude},');
-                },
                 color: Colors.orange.shade300,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -52,15 +41,44 @@ class Homepage extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
+                minWidth: double.infinity,
+                height: 45,
+                onPressed: () async {
+                  try {
+                    // loading
+                    setState(() => _isLoading = true);
+                    //get restaurant data from service
+                    var data =
+                        await locationProvider.retrieveNearbyRestaurants();
+                    // convert data to list
+                    restaurantData = locationProvider.toListOfRestaurant(data);
+                    print(restaurantData.length);
+                    // stop loading
+                    setState(() => _isLoading = false);
+                  } catch (error) {
+                    setState(() => _isLoading = false);
+                    var snackBar = SnackBar(content: Text(error.toString()));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
               ),
             ),
-            SizedBox(height: 10),
+
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text('Popular',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.grey)),
+            ),
+            SizedBox(height: 5),
             // list of retaurants
             Expanded(
                 child: _isLoading
                     ? Center(child: CircularProgressIndicator())
                     : !_isLoading && restaurantData.length == 0
-                        ? Center(child: Text('no restaurants around you!'))
+                        ? Center(child: Text('get restaurants around you!'))
                         : ListView.builder(
                             itemCount: restaurantData.length,
                             itemBuilder: (ctx, index) {

@@ -35,26 +35,35 @@ class LocationService {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<List<Restaurant>> retrieveNearbyRestaurants() async {
+  Future<List<PlacesSearchResult>> retrieveNearbyRestaurants() async {
     // get places from google maps
     final places = GoogleMapsPlaces(apiKey: cons.googleApiKey);
     // get current location
     Position position = await getCurrentLocation();
     // get result of nearby restaurants from Google Places API
-    PlacesSearchResponse _response = await places.searchNearbyWithRadius(
+    PlacesSearchResponse response = await places.searchNearbyWithRadius(
         Location(position.latitude, position.longitude), 10000,
+        // Location(15.6564, 32.5454)
         type: "restaurant");
+    return response.results;
+  }
 
+  List<Restaurant> toListOfRestaurant(List<PlacesSearchResult> placesData) {
     // convert result to list of restaurant object
-    List<Restaurant> _restaurantList = _response.results
+    List<Restaurant> restaurantList = placesData
         .map((result) => Restaurant(
-              name: result.name,
-              image: result.image,
-              rate: result.rating ?? 1,
-              place: result.place,
+              name: result.name ?? '',
+              image: result.photos == null
+                  ? result.icon
+                  : getImageUrl(result.photos.first.photoReference),
+              rate: result.rating == null ? 1 : result.rating.toInt(),
+              place: result.formattedAddress ?? result.vicinity ?? 'khartoum',
             ))
         .toList();
+    return restaurantList;
+  }
 
-    return _restaurantList;
+  String getImageUrl(String photoReference) {
+    return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${cons.googleApiKey}';
   }
 }

@@ -31,11 +31,14 @@ class RestaurantItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ClipRRect(
-              child: Image.asset(
+              child: Image.network(
+                restaurat.image,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.2,
-                restaurat.image,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset('assets/images/default_image.png');
+                },
               ),
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -53,20 +56,23 @@ class RestaurantItem extends StatelessWidget {
               height: 9.0,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Icon(
                   Icons.pin_drop,
                   color: Colors.grey[400],
                 ),
-                Text(
-                  restaurat.place,
-                  style: TextStyle(
-                    color: Colors.grey[400],
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    restaurat.place,
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                    ),
                   ),
                 ),
-                Spacer(),
                 Flexible(
-                  flex: 3,
+                  flex: 1,
                   child: FittedBox(
                     child: StarDisplay(
                       value: restaurat.rate,

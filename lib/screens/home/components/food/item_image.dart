@@ -14,6 +14,9 @@ class ItemImage extends StatelessWidget {
         height: size.height * 0.25,
         width: double.infinity,
         fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/default_image.png');
+        },
       ),
     );
   }
