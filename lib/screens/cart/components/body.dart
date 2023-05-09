@@ -1,7 +1,6 @@
 import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/dummy_data.dart';
 import '../../../size.config.dart';
 import 'cart_card.dart';
 

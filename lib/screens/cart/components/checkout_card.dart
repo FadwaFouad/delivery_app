@@ -1,14 +1,22 @@
 import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
+import '../../../data/services/payment_service.dart';
+import '../../../providers/payment_provider.dart';
 import '../../../size.config.dart';
 import 'default_button.dart';
 
-class CheckoutCard extends StatelessWidget {
+class CheckoutCard extends StatefulWidget {
   const CheckoutCard({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<CheckoutCard> createState() => _CheckoutCardState();
+}
+
+class _CheckoutCardState extends State<CheckoutCard> {
+  bool _isLoadingPayment = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,27 +70,62 @@ class CheckoutCard extends StatelessWidget {
                     shape: BoxShape.rectangle,
                     color: Colors.blue.shade100,
                   ),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Row(
-                      children: [
-                        Text("Check with Credit Card ",
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue.shade800)),
-                        Image.asset(
-                          'assets/images/credit.png',
-                          width: 35,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                        Icon(
-                          color: Colors.blue,
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                        ),
-                      ],
+                  child: CartWidget(
+                    cartBuilder: (controller) => InkWell(
+                      onTap: () async {
+                        // check if total equal Zero
+                        if (controller.getTotalPrice() == 0.0)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("nothing to  paid")));
+                        else {
+                          setState(() {
+                            _isLoadingPayment = true;
+                          });
+                          // call payment service which use stripe for payment
+                          PaymentStatus paidStatus = await paymentProvider
+                              .makePayment(controller.getTotalPrice());
+                          setState(() {
+                            _isLoadingPayment = false;
+                          });
+                          if (paidStatus == PaymentStatus.success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("paid successfully")));
+                            // clear cart from item
+                            controller.clearCart();
+                          } else
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("paid failed")));
+                        }
+                      },
+                      child: _isLoadingPayment
+                          ? SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.blue)))
+                          : Row(
+                              children: [
+                                Text("Check with Credit Card ",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue.shade800)),
+                                Image.asset(
+                                  'assets/images/credit.png',
+                                  width: 35,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                                Icon(
+                                  color: Colors.blue,
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                 )
@@ -109,7 +152,12 @@ class CheckoutCard extends StatelessWidget {
                     width: getProportionateScreenWidth(190),
                     child: DefaultButton(
                       text: "Check Out",
-                      press: () {},
+                      press: () {
+                        if (controller.getTotalPrice() == 0.0)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("nothing to  paid")));
+                      },
                     ),
                   ),
                 ],

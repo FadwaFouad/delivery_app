@@ -43,7 +43,8 @@ dependencies:
   geolocator: ^9.0.2
   google_maps_webservice: ^0.0.19
   fancy_cart: ^0.0.6
-  
+  http: ^0.13.6
+  flutter_stripe: ^9.2.0
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  plugin:
+    platforms:
+      ios:
+        pluginClass: AppDelegate
 
   # To add assets to your application, add an assets section, like this:
   assets:
