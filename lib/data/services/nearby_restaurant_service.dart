@@ -4,7 +4,7 @@ import 'package:google_maps_webservice/places.dart';
 
 import '../../constants.dart' as cons;
 
-class LocationService {
+class NearbyRestaurantService {
   // get current location of user
   Future<Position> getCurrentLocation() async {
     bool serviceEnable;

@@ -48,10 +48,11 @@ class _HomepageState extends State<Homepage> {
                     // loading
                     setState(() => _isLoading = true);
                     //get restaurant data from service
-                    var data =
-                        await locationProvider.retrieveNearbyRestaurants();
+                    var data = await nearbyRestaurantProvider
+                        .retrieveNearbyRestaurants();
                     // convert data to list
-                    restaurantData = locationProvider.toListOfRestaurant(data);
+                    restaurantData =
+                        nearbyRestaurantProvider.toListOfRestaurant(data);
                     print(restaurantData.length);
                     // stop loading
                     setState(() => _isLoading = false);

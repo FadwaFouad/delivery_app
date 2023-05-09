@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:delivery_app/data/services/location_service.dart';
+import 'package:delivery_app/data/services/nearby_restaurant_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // get menu data from firestore
@@ -9,4 +9,4 @@ final dataStreamProvider =
 });
 
 // get near restaurant from location service
-final locationProvider = LocationService();
+final nearbyRestaurantProvider = NearbyRestaurantService();
