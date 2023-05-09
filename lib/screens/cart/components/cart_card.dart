@@ -42,6 +42,7 @@ class CartCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +52,7 @@ class CartCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              ' ${food.name}, ',
+                              '${food.name}',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: Colors.black54, fontSize: 17),

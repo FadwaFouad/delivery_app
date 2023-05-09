@@ -1,7 +1,6 @@
 import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/dummy_data.dart';
 import 'components/body.dart';
 import 'components/checkout_card.dart';
 

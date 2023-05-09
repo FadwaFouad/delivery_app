@@ -66,15 +66,15 @@ class CheckoutCard extends StatelessWidget {
                     onTap: () {},
                     child: Row(
                       children: [
-                        Text("Check with ",
+                        Text("Check with Credit Card ",
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue.shade800)),
                         Image.asset(
-                          'assets/images/paypal.png',
-                          width: 80,
-                          height: 50,
+                          'assets/images/credit.png',
+                          width: 35,
+                          height: 40,
                           fit: BoxFit.cover,
                         ),
                         Icon(

@@ -30,7 +30,7 @@ class OrderButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
 
-      /// add to cart button with action after add and model to add
+      /// use fancy_cart to add foods to cart
       child: AddToCartButton(
         actionAfterAdding: () {
           String message = "${food.name} added to Cart";
@@ -38,7 +38,7 @@ class OrderButton extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
         cartModel: CartItem(
-            id: DateTime.now().millisecondsSinceEpoch,
+            id: food.id,
             name: food.name,
             price: food.price,
             image: food.image,
