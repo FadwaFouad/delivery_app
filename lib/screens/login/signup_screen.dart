@@ -106,6 +106,7 @@ class _SignupPageState extends State<SignupPage> {
                       child: _isLoading
                           ? CircularProgressIndicator(
                               color: Colors.white,
+                              strokeWidth: 2.0,
                             )
                           : Text(
                               "Sign up",

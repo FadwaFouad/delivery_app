@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:delivery_app/screens/cart/cart_screen.dart';
-import 'package:delivery_app/screens/cart/payment_screen.dart';
 import 'package:delivery_app/screens/profile/profile.dart';
 import 'package:delivery_app/size.config.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,6 @@ class _BottomNavState extends State<BottomNav> {
         children: [
           Homepage(),
           CartScreen(),
-          PaymentScreen(),
           Profile(),
         ],
       ),

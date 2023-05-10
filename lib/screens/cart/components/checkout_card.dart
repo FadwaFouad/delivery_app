@@ -105,7 +105,9 @@ class _CheckoutCardState extends State<CheckoutCard> {
                               height: 50,
                               child: Center(
                                   child: CircularProgressIndicator(
-                                      color: Colors.blue)))
+                                color: Colors.blue,
+                                strokeWidth: 2.0,
+                              )))
                           : Row(
                               children: [
                                 Text("Check with Credit Card ",

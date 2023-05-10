@@ -104,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: _isLoading
                               ? CircularProgressIndicator(
                                   color: Colors.white,
+                                  strokeWidth: 2.0,
                                 )
                               : Text(
                                   "Sign in",

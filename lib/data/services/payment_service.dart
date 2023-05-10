@@ -19,8 +19,7 @@ class PaymentService {
     PaymentStatus status = PaymentStatus.fail;
     try {
       // change amount to integer and to string after that
-      paymentIntent =
-          await createPaymentIntent(amount.round().toString(), _currency);
+      paymentIntent = await createPaymentIntent(amount, _currency);
       //Payment Sheet
       await Stripe.instance
           .initPaymentSheet(
@@ -59,7 +58,7 @@ class PaymentService {
   }
 
 // send request to stripe to get [client_secret]
-  createPaymentIntent(String amount, String currency) async {
+  createPaymentIntent(double amount, String currency) async {
     try {
       Map<String, dynamic> body = {
         'amount': calculateAmount(amount),
@@ -85,11 +84,9 @@ class PaymentService {
   }
 
 // cal amount from string to cenets
-  calculateAmount(String amount) {
-    //
-
-    //cal
-    final calculatedAmout = (int.parse(amount)) * 100;
-    return calculatedAmout.toString();
+  calculateAmount(double amount) {
+    //cal amount Int Cents to use with stripe API
+    int amountInCents = (amount * 100).toInt();
+    return amountInCents.toString();
   }
 }
