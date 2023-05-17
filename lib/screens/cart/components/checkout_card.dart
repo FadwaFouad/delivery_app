@@ -1,9 +1,12 @@
 import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants.dart';
+import '../../../data/models/order.dart';
 import '../../../data/services/payment_service.dart';
+import '../../../providers/order_provider.dart';
 import '../../../providers/payment_provider.dart';
-import '../../../size.config.dart';
+import '../../../size_config.dart';
 import 'default_button.dart';
 
 class CheckoutCard extends StatefulWidget {
@@ -70,99 +73,145 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     shape: BoxShape.rectangle,
                     color: Colors.blue.shade100,
                   ),
-                  child: CartWidget(
-                    cartBuilder: (controller) => InkWell(
-                      onTap: () async {
-                        // check if total equal Zero
-                        if (controller.getTotalPrice() == 0.0)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("nothing to  paid")));
-                        else {
-                          setState(() {
-                            _isLoadingPayment = true;
-                          });
-                          // call payment service which use stripe for payment
-                          PaymentStatus paidStatus = await paymentProvider
-                              .makePayment(controller.getTotalPrice());
-                          setState(() {
-                            _isLoadingPayment = false;
-                          });
-                          if (paidStatus == PaymentStatus.success) {
+                  child: Consumer(
+                    builder: (context, ref, child) => CartWidget(
+                      cartBuilder: (controller) => InkWell(
+                        onTap: () async {
+                          // check if total equal Zero
+                          if (controller.getTotalPrice() == 0.0)
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text("paid successfully")));
-                            // clear cart from item
-                            controller.clearCart();
-                          } else
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("paid failed")));
-                        }
-                      },
-                      child: _isLoadingPayment
-                          ? SizedBox(
-                              width: 200,
-                              height: 50,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: Colors.blue,
-                                strokeWidth: 2.0,
-                              )))
-                          : Row(
-                              children: [
-                                Text("Check with Credit Card ",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade800)),
-                                Image.asset(
-                                  'assets/images/credit.png',
-                                  width: 35,
-                                  height: 40,
-                                  fit: BoxFit.cover,
-                                ),
-                                Icon(
+                                    content: Text("nothing to  paid")));
+                          else {
+                            setState(() {
+                              _isLoadingPayment = true;
+                            });
+                            // call payment service which use stripe for payment
+                            PaymentStatus paidStatus = await paymentProvider
+                                .makePayment(controller.getTotalPrice());
+                            setState(() {
+                              _isLoadingPayment = false;
+                            });
+                            if (paidStatus == PaymentStatus.success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("paid successfully")));
+                              // access order provider
+                              var provider = ref.read(orderProvider);
+                              // init new order
+                              Order order = Order(
+                                  number: provider.getNumOfOrder,
+                                  dateTime: DateTime.now(),
+                                  items: controller.cartList,
+                                  status: 0,
+                                  paymentType: 'Paid',
+                                  totalPrice: controller.getTotalPrice());
+                              // add new order to list
+                              provider.addOrder(order);
+                              // clear cart from items
+                              controller.clearCart();
+                              // remove any previous snackbar
+                              ScaffoldMessenger.of(context)
+                                  .removeCurrentSnackBar();
+                              // show message to user
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("new order added")));
+                            } else
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("paid failed")));
+                          }
+                        },
+                        child: _isLoadingPayment
+                            ? SizedBox(
+                                width: 200,
+                                height: 50,
+                                child: Center(
+                                    child: CircularProgressIndicator(
                                   color: Colors.blue,
-                                  Icons.arrow_forward_ios,
-                                  size: 15,
-                                ),
-                              ],
-                            ),
+                                  strokeWidth: 2.0,
+                                )))
+                            : Row(
+                                children: [
+                                  Text("Check with Credit Card ",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue.shade800)),
+                                  Image.asset(
+                                    'assets/images/credit.png',
+                                    width: 35,
+                                    height: 40,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Icon(
+                                    color: Colors.blue,
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
+                                ],
+                              ),
+                      ),
                     ),
                   ),
                 )
               ],
             ),
             SizedBox(height: getProportionateScreenWidth(10)),
-            CartWidget(
-              cartBuilder: (controller) => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: "Total\n",
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                          text: "\$${controller.getTotalPrice()}",
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        ),
-                      ],
+            Consumer(
+              builder: (context, ref, child) => CartWidget(
+                cartBuilder: (controller) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        text: "Total\n",
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                            text: "\$${controller.getTotalPrice()}",
+                            style: TextStyle(fontSize: 15, color: Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: getProportionateScreenWidth(190),
-                    child: DefaultButton(
-                      text: "Check Out",
-                      press: () {
-                        if (controller.getTotalPrice() == 0.0)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("nothing to  paid")));
-                      },
+                    SizedBox(
+                      width: getProportionateScreenWidth(190),
+                      child: DefaultButton(
+                        text: "Check Out",
+                        press: () {
+                          if (controller.getTotalPrice() == 0.0)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("nothing to  paid")));
+                          else {
+                            // access order provider
+                            var provider = ref.read(orderProvider);
+                            // init new order
+                            Order order = Order(
+                                number: provider.getNumOfOrder,
+                                dateTime: DateTime.now(),
+                                items: controller.cartList,
+                                status: 0,
+                                paymentType: 'Cash',
+                                totalPrice: controller.getTotalPrice());
+                            // add new order to list
+                            provider.addOrder(order);
+                            // clear cart from items
+                            controller.clearCart();
+                            // remove any previous snackbar
+                            ScaffoldMessenger.of(context)
+                                .removeCurrentSnackBar();
+                            // show message to user
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("new order added")));
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

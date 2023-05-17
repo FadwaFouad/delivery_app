@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 
 import '../../constants.dart' as cons;
+import '../../keys.dart' as keys;
 
 class NearbyRestaurantService {
   // get current location of user
@@ -37,7 +38,7 @@ class NearbyRestaurantService {
 
   Future<List<PlacesSearchResult>> retrieveNearbyRestaurants() async {
     // get places from google maps
-    final places = GoogleMapsPlaces(apiKey: cons.googleApiKey);
+    final places = GoogleMapsPlaces(apiKey: keys.googleApiKey);
     // get current location
     Position position = await getCurrentLocation();
     // get result of nearby restaurants from Google Places API
@@ -54,7 +55,7 @@ class NearbyRestaurantService {
         .map((result) => Restaurant(
               name: result.name ?? '',
               image: result.photos == null
-                  ? result.icon
+                  ? getDefaultRestaurantImage
                   : getImageUrl(result.photos.first.photoReference),
               rate: result.rating == null ? 1 : result.rating.toInt(),
               place: result.formattedAddress ?? result.vicinity ?? 'khartoum',
@@ -64,6 +65,9 @@ class NearbyRestaurantService {
   }
 
   String getImageUrl(String photoReference) {
-    return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${cons.googleApiKey}';
+    return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${keys.googleApiKey}';
   }
+
+  String get getDefaultRestaurantImage =>
+      'https://firebasestorage.googleapis.com/v0/b/delivery-app-61495.appspot.com/o/res-image.png?alt=media&token=8e41e997-24dc-438c-b95d-4fe1ca007165';
 }

@@ -45,6 +45,9 @@ dependencies:
   fancy_cart: ^0.0.6
   http: ^0.13.6
   flutter_stripe: ^9.2.0
+  intl: ^0.17.0
+  order_tracker: ^0.0.2
+  flutter_timeline: ^0.3.0
 
 dev_dependencies:
   flutter_test:

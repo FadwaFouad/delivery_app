@@ -2,7 +2,7 @@ import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart' as cons;
-import '../../../size.config.dart' as size;
+import '../../../size_config.dart' as size;
 
 class CartCard extends StatelessWidget {
   const CartCard({
