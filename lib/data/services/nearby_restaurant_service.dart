@@ -2,7 +2,6 @@ import 'package:delivery_app/data/models/restaurant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 
-import '../../constants.dart' as cons;
 import '../../keys.dart' as keys;
 
 class NearbyRestaurantService {
@@ -43,7 +42,7 @@ class NearbyRestaurantService {
     Position position = await getCurrentLocation();
     // get result of nearby restaurants from Google Places API
     PlacesSearchResponse response = await places.searchNearbyWithRadius(
-        Location(position.latitude, position.longitude), 10000,
+        Location(lat: position.latitude, lng: position.longitude), 10000,
         // Location(15.6564, 32.5454)
         type: "restaurant");
     return response.results;
@@ -53,11 +52,11 @@ class NearbyRestaurantService {
     // convert result to list of restaurant object
     List<Restaurant> restaurantList = placesData
         .map((result) => Restaurant(
-              name: result.name ?? '',
-              image: result.photos == null
+              name: result.name,
+              rate: result.rating?.toInt() ?? 1,
+              image: result.photos.isEmpty
                   ? getDefaultRestaurantImage
                   : getImageUrl(result.photos.first.photoReference),
-              rate: result.rating == null ? 1 : result.rating.toInt(),
               place: result.formattedAddress ?? result.vicinity ?? 'khartoum',
             ))
         .toList();

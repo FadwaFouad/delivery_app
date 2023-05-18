@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constants.dart';
 import '../../../../data/models/food.dart';
-import '../../../login/login_screen.dart';
 
 class OrderButton extends StatelessWidget {
   const OrderButton({

@@ -53,7 +53,6 @@ class _HomepageState extends State<Homepage> {
                     // convert data to list
                     restaurantData =
                         nearbyRestaurantProvider.toListOfRestaurant(data);
-                    print(restaurantData.length);
                     // stop loading
                     setState(() => _isLoading = false);
                   } catch (error) {
@@ -61,8 +60,9 @@ class _HomepageState extends State<Homepage> {
                     setState(() => _isLoading = false);
                     // when unable to host googleapi services, check internet
                     if (message ==
-                        'Failed host lookup: \'maps.googleapis.com\'')
+                        'Failed host lookup: \'maps.googleapis.com\'') {
                       message = 'check internet connection';
+                    }
                     var snackBar = SnackBar(content: Text(message));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
