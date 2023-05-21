@@ -1,8 +1,8 @@
 import 'package:delivery_app/constants.dart' as cons;
 import 'package:flutter/material.dart';
 
-import 'components/active_order.dart';
-import 'components/history_order.dart';
+import 'active_order.dart';
+import 'history_order.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});

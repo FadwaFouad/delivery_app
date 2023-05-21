@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:order_tracker/order_tracker.dart';
 
 class OrderTimeline extends StatelessWidget {
-  const OrderTimeline({super.key});
+  final int statusNumber;
+
+  const OrderTimeline({super.key, required this.statusNumber});
   @override
   Widget build(BuildContext context) {
     List<TextDto> orderList = [
@@ -23,8 +25,8 @@ class OrderTimeline extends StatelessWidget {
     ];
 
     return OrderTracker(
-      status: Status.order,
-      activeColor: kPrimaryColor.shade400,
+      status: getStatus(statusNumber),
+      activeColor: kPrimaryColor.shade700,
       inActiveColor: Colors.grey[300],
       headingTitleStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
       subTitleTextStyle: TextStyle(color: Colors.black54),
@@ -33,5 +35,20 @@ class OrderTimeline extends StatelessWidget {
       outOfDeliveryTitleAndDateList: outOfDeliveryList,
       deliveredTitleAndDateList: deliveredList,
     );
+  }
+
+  getStatus(int num) {
+    switch (num) {
+      case 0:
+        return Status.order;
+      case 1:
+        return Status.shipped;
+      case 2:
+        return Status.outOfDelivery;
+      case 3:
+        return Status.delivered;
+      default:
+        return Status.order;
+    }
   }
 }

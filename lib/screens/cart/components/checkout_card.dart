@@ -19,7 +19,8 @@ class CheckoutCard extends StatefulWidget {
 }
 
 class _CheckoutCardState extends State<CheckoutCard> {
-  bool _isLoadingPayment = false;
+  bool _isPaymentLoading = false;
+  bool _isCheckoutLoading = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +28,6 @@ class _CheckoutCardState extends State<CheckoutCard> {
         vertical: getProportionateScreenWidth(15),
         horizontal: getProportionateScreenWidth(30),
       ),
-      // height: 174,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -76,53 +76,64 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   child: Consumer(
                     builder: (context, ref, child) => CartWidget(
                       cartBuilder: (controller) => InkWell(
-                        onTap: () async {
-                          // check if total equal Zero
-                          if (controller.getTotalPrice() == 0.0)
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("nothing to  paid")));
-                          else {
-                            setState(() {
-                              _isLoadingPayment = true;
-                            });
-                            // call payment service which use stripe for payment
-                            PaymentStatus paidStatus = await paymentProvider
-                                .makePayment(controller.getTotalPrice());
-                            setState(() {
-                              _isLoadingPayment = false;
-                            });
-                            if (paidStatus == PaymentStatus.success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("paid successfully")));
-                              // access order provider
-                              var provider = ref.read(orderProvider);
-                              // init new order
-                              Order order = Order(
-                                  number: provider.getNumOfOrder,
-                                  dateTime: DateTime.now(),
-                                  items: controller.cartList,
-                                  status: 0,
-                                  paymentType: 'Paid',
-                                  totalPrice: controller.getTotalPrice());
-                              // add new order to list
-                              provider.addOrder(order);
-                              // clear cart from items
-                              controller.clearCart();
-                              // remove any previous snackbar
-                              ScaffoldMessenger.of(context)
-                                  .removeCurrentSnackBar();
-                              // show message to user
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("new order added")));
-                            } else
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("paid failed")));
-                          }
-                        },
-                        child: _isLoadingPayment
+                        // make payment button diable when checkout loading
+                        onTap: _isCheckoutLoading
+                            ? null
+                            : () async {
+                                // check if total equal Zero
+                                if (controller.getTotalPrice() == 0.0)
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text("nothing to  paid")));
+                                else {
+                                  setState(() {
+                                    _isPaymentLoading = true;
+                                  });
+                                  // call payment service which use stripe for payment
+                                  PaymentStatus paidStatus =
+                                      await paymentProvider.makePayment(
+                                          controller.getTotalPrice());
+
+                                  if (paidStatus == PaymentStatus.success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text("paid successfully")));
+                                    // access order provider
+                                    var provider = ref.read(orderProvider);
+                                    // init new order
+                                    Order order = Order(
+                                        number: provider.getNumOfOrder,
+                                        dateTime: DateTime.now(),
+                                        items: controller.cartList,
+                                        status: 0,
+                                        paymentType: 'Paid',
+                                        totalPrice: controller.getTotalPrice());
+                                    // add new order to list
+                                    await provider.addOrder(order);
+                                    // clear cart from items
+                                    controller.clearCart();
+                                    setState(() {
+                                      _isPaymentLoading = false;
+                                    });
+                                    // remove any previous snackbar
+                                    ScaffoldMessenger.of(context)
+                                        .removeCurrentSnackBar();
+                                    // show message to user
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("new order added")));
+                                  } else {
+                                    setState(() {
+                                      _isPaymentLoading = false;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("paid failed")));
+                                  }
+                                }
+                              },
+                        child: _isPaymentLoading
                             ? SizedBox(
                                 width: 200,
                                 height: 50,
@@ -177,38 +188,56 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     ),
                     SizedBox(
                       width: getProportionateScreenWidth(190),
-                      child: DefaultButton(
-                        text: "Check Out",
-                        press: () {
-                          if (controller.getTotalPrice() == 0.0)
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("nothing to  paid")));
-                          else {
-                            // access order provider
-                            var provider = ref.read(orderProvider);
-                            // init new order
-                            Order order = Order(
-                                number: provider.getNumOfOrder,
-                                dateTime: DateTime.now(),
-                                items: controller.cartList,
-                                status: 0,
-                                paymentType: 'Cash',
-                                totalPrice: controller.getTotalPrice());
-                            // add new order to list
-                            provider.addOrder(order);
-                            // clear cart from items
-                            controller.clearCart();
-                            // remove any previous snackbar
-                            ScaffoldMessenger.of(context)
-                                .removeCurrentSnackBar();
-                            // show message to user
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("new order added")));
-                          }
-                        },
-                      ),
+                      child: _isCheckoutLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              color: kPrimaryColor,
+                              strokeWidth: 2.0,
+                            ))
+                          : DefaultButton(
+                              text: "Check Out",
+                              // make checkout button diable when payment loading
+                              press: _isPaymentLoading
+                                  ? null
+                                  : () async {
+                                      if (controller.getTotalPrice() == 0.0)
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content:
+                                                    Text("nothing to  paid")));
+                                      else {
+                                        setState(() {
+                                          _isCheckoutLoading = true;
+                                        });
+                                        // access order provider
+                                        var provider = ref.read(orderProvider);
+                                        // init new order
+                                        Order order = Order(
+                                            number: provider.getNumOfOrder,
+                                            dateTime: DateTime.now(),
+                                            items: controller.cartList,
+                                            status: 0,
+                                            paymentType: 'Cash',
+                                            totalPrice:
+                                                controller.getTotalPrice());
+                                        // add new order to list
+                                        await provider.addOrder(order);
+                                        // clear cart from items
+                                        controller.clearCart();
+                                        setState(() {
+                                          _isCheckoutLoading = false;
+                                        });
+                                        // remove any previous snackbar
+                                        ScaffoldMessenger.of(context)
+                                            .removeCurrentSnackBar();
+                                        // show message to user
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content:
+                                                    Text("new order added")));
+                                      }
+                                    },
+                            ),
                     ),
                   ],
                 ),

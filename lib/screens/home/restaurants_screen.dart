@@ -18,7 +18,7 @@ class RestaurantScreen extends ConsumerWidget {
         ModalRoute.of(context)!.settings.arguments as String;
 
     // get data from provider
-    final _data = ref.watch(dataStreamProvider(cons.restaurantName));
+    final _data = ref.watch(menuDataProvider(cons.restaurantName));
 
     return SafeArea(
       child: Scaffold(

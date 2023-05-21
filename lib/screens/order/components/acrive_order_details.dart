@@ -56,7 +56,7 @@ class ActiveOrderDetails extends StatelessWidget {
                     letterSpacing: 1)),
             // oreder time line
             SizedBox(height: 25),
-            OrderTimeline(),
+            OrderTimeline(statusNumber: order.status),
             SizedBox(height: 15),
             Divider(thickness: 1.5),
           ]))

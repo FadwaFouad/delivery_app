@@ -1,7 +1,9 @@
 import 'package:delivery_app/constants.dart';
-import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/order.dart';
+import '../../../data/services/order_service.dart';
+import '../../../providers/order_provider.dart';
 import '../../../size_config.dart';
 import '../../cart/components/default_button.dart' as cart;
 import 'helper.dart' as helper;
@@ -64,7 +66,8 @@ class HistoryOrderDetails extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   width: double.infinity,
                   height: SizeConfig.screenHeight * 0.40,
-                  child: getListOfFood(order.items),
+                  // get foods list for each item from server
+                  child: getListOfFood(order.id ?? ''),
                 ),
                 SizedBox(height: 10),
                 Divider(thickness: 1.5),
@@ -106,50 +109,65 @@ class HistoryOrderDetails extends StatelessWidget {
     );
   }
 
-  getListOfFood(List<CartItem> foodList) {
-    return ListView.builder(
-        itemCount: foodList.length,
-        itemBuilder: (context, index) {
-          // the food items inside order
-          var foodItem = foodList[index];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Color.fromRGBO(245, 245, 245, 1),
-              child: Text(
-                'x${foodItem.quantity.toString()}',
-              ),
-            ),
-            title: Expanded(
-              child: Text(
-                foodItem.name,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Icon(
-                  Icons.location_pin,
-                  color: Colors.grey[400],
-                  size: 20,
-                ),
-                SizedBox(width: 5),
-                Expanded(
-                  child: Text(
-                    foodItem.additionalData['restaurant'],
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            trailing: Text(
-              "\$${foodItem.price}",
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: kPrimaryColor),
-            ),
-          );
-        });
+  getListOfFood(String orderID) {
+    return Consumer(builder: (context, ref, child) {
+      var data = ref.watch(foodItemsOfOrderProvider(orderID));
+      return data.when(
+          loading: () => const Center(
+                  child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.grey,
+              )),
+          error: (error, trace) => Center(child: Text('$error')),
+          data: (data) {
+            var foodList = data.docs
+                .map((doc) => OrderService().foodItemsFromFirestore(doc))
+                .toList();
+            return ListView.builder(
+                itemCount: foodList.length,
+                itemBuilder: (context, index) {
+                  // the food items inside order
+                  var foodItem = foodList[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+                      child: Text(
+                        'x${foodItem.quantity.toString()}',
+                      ),
+                    ),
+                    title: Expanded(
+                      child: Text(
+                        foodItem.name,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.location_pin,
+                          color: Colors.grey[400],
+                          size: 20,
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            foodItem.additionalData['restaurant'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: Text(
+                      "\$${foodItem.price}",
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: kPrimaryColor),
+                    ),
+                  );
+                });
+          });
+    });
   }
 }
