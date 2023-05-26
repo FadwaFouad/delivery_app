@@ -1,9 +1,9 @@
 # delivery_app
 
-The App show restaurants near user debends on user's current location,give user ability to select the food from menu and added to cart, make order, track order, save history order and give user option to reorder the order. 
+The App show restaurants near user debends on current location,give user ability to select foods from menu, added them to cart, make order, pay for order, track order, save history order and give user option to reorder the order. 
 
 # Tools 
-the app developed use flutter. Google Places API to get nearest restaurants to user location.Also Firebase and its services used as backend for app (Auth,firestore. storage, functions). Besides, Stripe used to implement credit card payment. 
+the app developed use flutter, Google Places API used to get nearest restaurants. Also Firebase and its services used as backend for app (Auth, firestore, storage, functions). Besides, Stripe used to implement credit card payment. 
 
 
 . 
