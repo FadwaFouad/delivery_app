@@ -1,6 +1,16 @@
 # delivery_app
 
-A new Flutter project.
+The App show restaurants near user debends on user's current location,give user ability to select the food from menu and added to cart, make order, track order, save history order and give user option to reorder the order. 
+
+# Tools 
+the app developed use flutter. Google Places API to get nearest restaurants to user location.Also Firebase and its services used as backend for app (Auth,firestore. storage, functions). Besides, Stripe used to implement credit card payment. 
+
+
+. 
+. 
+. 
+
+you can check screenshots for app in main directory as jpg files. 
 
 ## Getting Started
 
