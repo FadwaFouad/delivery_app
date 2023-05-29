@@ -9,22 +9,13 @@ final orderProvider = Provider<OrderService>((ref) {
 // get active order data from firestore
 final activeOrderDataProvider =
     StreamProvider.autoDispose<QuerySnapshot>((ref) {
-  return FirebaseFirestore.instance
-      .collection('Orders')
-      // when status is (0,1,2) that mean the order is active
-      .where('status', whereIn: [0, 1, 2])
-      .orderBy('dateTime', descending: true)
-      .snapshots();
+  return OrderService().getActiveOrderData();
 });
 
+// get history data from firestore
 final historyOrderDataProvider =
     StreamProvider.autoDispose<QuerySnapshot>((ref) {
-  return FirebaseFirestore.instance
-      .collection('Orders')
-      // when status is (3=> Delevired ) that mean it's a history order
-      .where('status', isEqualTo: 3)
-      .orderBy('dateTime', descending: true)
-      .snapshots();
+  return OrderService().getHistoryOrderData();
 });
 
 // get food list for each order use orderID

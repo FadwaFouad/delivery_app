@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants.dart';
+import '../../../providers/auth_provider.dart';
 
-class ProfileBar extends StatelessWidget {
+class ProfileBar extends ConsumerWidget {
   const ProfileBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final user = null;
+  Widget build(BuildContext context, ref) {
+    // get current user
+    final user = ref.read(authProvider).currentUser;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,7 +39,7 @@ class ProfileBar extends StatelessWidget {
             ),
             SizedBox(width: 5),
             Text(
-              'ahmed@gmail.com',
+              user?.email ?? '',
             ),
           ],
         ),
