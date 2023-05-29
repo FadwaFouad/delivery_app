@@ -31,12 +31,12 @@ class CartScreen extends StatelessWidget {
               fontSize: 17,
             ),
           ),
-          CartWidget(
-            cartBuilder: (controller) => Text(
+          CartWidget(cartBuilder: (controller) {
+            return Text(
               "${controller.cartList.length} items",
               style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

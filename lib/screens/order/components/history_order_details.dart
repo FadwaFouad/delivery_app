@@ -1,4 +1,5 @@
 import 'package:delivery_app/constants.dart';
+import 'package:fancy_cart/fancy_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/order.dart';
@@ -100,9 +101,17 @@ class HistoryOrderDetails extends StatelessWidget {
         ]),
         bottomNavigationBar: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: cart.DefaultButton(
-            text: 'Reorder',
-            press: () {},
+          child: CartWidget(
+            cartBuilder: (controller) => cart.DefaultButton(
+              text: 'Reorder',
+              press: () {
+                print(order.items.length);
+                for (var cart in order.items) controller.addItem(cart);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text(" items added to cart")));
+              },
+            ),
           ),
         ),
       ),
@@ -123,6 +132,8 @@ class HistoryOrderDetails extends StatelessWidget {
             var foodList = data.docs
                 .map((doc) => OrderService().foodItemsFromFirestore(doc))
                 .toList();
+            // add food list to items of data to use in reorder button
+            order.items = foodList;
             return ListView.builder(
                 itemCount: foodList.length,
                 itemBuilder: (context, index) {

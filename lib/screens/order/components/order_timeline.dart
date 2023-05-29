@@ -11,15 +11,12 @@ class OrderTimeline extends StatelessWidget {
     List<TextDto> orderList = [
       TextDto("Your order has been placed & working on it", null),
     ];
-
     List<TextDto> shippedList = [
       TextDto("Your order has been prepared by our restaurants", null),
     ];
-
     List<TextDto> outOfDeliveryList = [
       TextDto("Your order is ready and on way to your location", null),
     ];
-
     List<TextDto> deliveredList = [
       TextDto("Order Delivered, enjoy and have fun!", null),
     ];
