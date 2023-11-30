@@ -6,6 +6,7 @@ import '../../constants.dart' as cons;
 import '../../data/models/food.dart';
 import 'components/restaurant/categories.dart';
 import 'components/restaurant/food_item.dart';
+import 'components/restaurant/search_field.dart';
 
 class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
@@ -19,6 +20,8 @@ class RestaurantScreen extends ConsumerWidget {
 
     // get data from provider
     final _data = ref.watch(menuDataProvider(cons.restaurantName));
+    final categoryProvider = ref.watch(categoryFoodProvider);
+    final searchProvider = ref.watch(searchFoodProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -30,7 +33,10 @@ class RestaurantScreen extends ConsumerWidget {
               children: [
                 SizedBox(width: 5),
                 IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    clearPreviousData(ref);
+                    Navigator.pop(context);
+                  },
                   icon: Icon(Icons.arrow_back_rounded),
                 ),
                 SizedBox(width: 15),
@@ -44,17 +50,7 @@ class RestaurantScreen extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search for a dish",
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
-                ),
-              ),
-            ),
+            SearchField(),
             SizedBox(height: 10),
             CategoriesList(),
             SizedBox(height: 10),
@@ -64,6 +60,10 @@ class RestaurantScreen extends ConsumerWidget {
                     List<Food> foodList = data.docs
                         .map((doc) => Food.fromFirestore(doc))
                         .toList();
+                    foodList = nearbyRestaurantProvider.getCategoryItems(
+                        categoryProvider, foodList);
+                    foodList = nearbyRestaurantProvider.searchFood(
+                        searchProvider, foodList);
                     return foodList.isEmpty
                         ? const Center(
                             child: Text(
@@ -91,5 +91,10 @@ class RestaurantScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void clearPreviousData(ref) {
+    ref.read(searchFoodProvider.notifier).state = '';
+    ref.read(categoryFoodProvider.notifier).state = "All";
   }
 }

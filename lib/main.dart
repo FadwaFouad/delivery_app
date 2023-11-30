@@ -21,7 +21,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await initializeFancyCart(
+  initializeFancyCart(
     child: const MyApp(),
   );
 

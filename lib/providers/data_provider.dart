@@ -10,3 +10,9 @@ final menuDataProvider =
 
 // get near restaurant from location service
 final nearbyRestaurantProvider = NearbyRestaurantService();
+
+// provider for search
+final searchFoodProvider = StateProvider<String>((ref) => '');
+
+// provider for category
+final categoryFoodProvider = StateProvider<String>((ref) => "All");

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 //Strings
 String restaurantName = 'Ozone';
 
+List<String> buttonsTitle = ["All", "Food", "Dessert", "Drinks", "Pizza"];
+
 // colors
 const kPrimaryColor = Colors.orange;
 const kPrimaryColorLight = Color(0xFFFFC61F);

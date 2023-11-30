@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CategoriesList extends StatefulWidget {
+import '../../../../constants.dart';
+import '../../../../providers/data_provider.dart';
+
+class CategoriesList extends ConsumerStatefulWidget {
+  const CategoriesList({super.key});
+
   @override
-  _CategoriesListState createState() => _CategoriesListState();
+  ConsumerState<CategoriesList> createState() => _CategoriesListState();
 }
 
-class _CategoriesListState extends State<CategoriesList> {
-  List<String> buttonsTitle = ["All", "Food", "Dessert", "Drinks", "Pizza"];
+class _CategoriesListState extends ConsumerState<CategoriesList> {
   int _active = 0;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 55,
       child: ListView.builder(
         itemCount: buttonsTitle.length,
@@ -19,6 +24,7 @@ class _CategoriesListState extends State<CategoriesList> {
             title: buttonsTitle[id],
             active: id == _active ? true : false,
             onTap: () {
+              ref.read(categoryFoodProvider.notifier).state = buttonsTitle[id];
               setState(() {
                 _active = id;
               });
